@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 import * as productService from '../services/product.service';
 
+// Controller function to get all products
 export const getAllProducts = async (req: Request,
                                      res: Response) => {
     try {
@@ -14,6 +15,7 @@ export const getAllProducts = async (req: Request,
     }
 }
 
+// Controller function to save a new product
 export const saveProduct = async (req: Request,
                                   res: Response) => {
     try {
@@ -36,6 +38,7 @@ export const saveProduct = async (req: Request,
 
 }
 
+// Controller function to update an existing product
 export const updateProduct = (req: Request,
                               res: Response) => {
     const productId = parseInt(req.params.id);
@@ -56,6 +59,7 @@ export const updateProduct = (req: Request,
     res.status(200).json(updateProduct);
 }
 
+// Controller function to delete a product
 export const deleteProduct = (req: Request,
                               res: Response) => {
     const productId = parseInt(req.params.id);
@@ -77,7 +81,8 @@ export const deleteProduct = (req: Request,
     })
 }
 
-export const getProductById = (req: Request,
+// Controller function to get a product by ID
+export const getProductById = async (req: Request,
                                res: Response) => {
     const productId = parseInt(req.params.id);
     if (isNaN(productId)) {
@@ -86,13 +91,14 @@ export const getProductById = (req: Request,
         });
         return;
     }
-    const product = productService.getProductById(productId);
+    const product = await productService.getProductById(productId);
     if (!product) {
         res.status(404).json({
             error: "Product not found"
         });
         return;
     }
+    console.log(`Product found getProductById in controller: ${product}`);
     res.status(200).json(product);
 
 }

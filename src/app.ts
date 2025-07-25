@@ -1,3 +1,4 @@
+// 1.Initialize express app
 import express, {Express} from "express";
 import productRoutes from "./routes/products.routes";
 import cors from 'cors';
@@ -7,13 +8,14 @@ import {authenticateToken} from "./middleware/auth.middleware";
 
 const app: Express = express();
 
+// 2.Middleware to parse JSON bodies
 app.use(express.json());
 
 const allowedOrigins = [
     "http://localhost:5173"
 ];
 
-
+// enable/allow CORS here
 const corsOptions = {
     origin: (origin: string | undefined,
              callback: (err: Error | null,
@@ -27,8 +29,8 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
+// 2.1.Middleware to parse URL-encoded bodies
 app.use("/api/products",authenticateToken, productRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/auth",authRoutes);
-
 export default app;

@@ -32,7 +32,7 @@ export const authenticateUser = (username: string,
                                  password: string) => {
     const existingUser: User | undefined = userList.find(user => user.username === username);
 
-    let isValidPassword = undefined !== existingUser && bcrypt.compareSync(password, <string>existingUser?.password);
+    let isValidPassword = undefined !== existingUser && bcrypt.compareSync(password,<string>existingUser?.password);
 
     if (!existingUser || !isValidPassword) {
         return null;
@@ -43,7 +43,7 @@ export const authenticateUser = (username: string,
         username: existingUser.username,
         role: existingUser.role
     }, JWT_SECRET, {
-        expiresIn: "60s"
+        expiresIn: "1d"
     });
 
     const refreshToken = jwt.sign({

@@ -20,10 +20,19 @@ const productModel =new mongoose.Schema(
             required: true,
             type: String
         },
+        "description": {
+            type: String,
+            default: ''
+        },
         "image": {
             required: true,
             type: String
-        }
+        },
+        "quantity": {
+            required: true,
+            type: Number,
+            default: 0
+        },
     }
 );
 
