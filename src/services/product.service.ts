@@ -10,17 +10,15 @@ export const saveProduct = async (product: ProductDto): Promise<ProductDto> => {
     return await Product.create(product);
 }
 
-export const getProductById = async (id: number): Promise<any> => {
-    console.log(`Fetching product with ID: ${id}`);
-
+export const getProductById = async (id: string): Promise<any> => {
     const product = await Product.findOne({id: id});
-
-    console.log(`Product found: ${product}`);
-
+    if (!product) {
+        return null;
+    }
     return product;
 }
 
-export const updateProduct = async (id: number, data: ProductDto) => {
+export const updateProduct = async (id: string, data: ProductDto) => {
     const product = await Product.findOneAndUpdate({id: id}, data, {new: true});
 
     if (!product) {
@@ -30,16 +28,7 @@ export const updateProduct = async (id: number, data: ProductDto) => {
     return product;
 }
 
-export const deleteProduct = async (id: number) => {
-    /*const index = productList.findIndex(product => product.id === id);
-
-    if (index === -1) {
-        return false;
-    }
-
-    // Remove the product from the list
-    productList.splice(index, 1);
-    return true;*/
+export const deleteProduct = async (id: string) => {
     await Product.deleteOne({id: id});
     return true;
 }
@@ -49,4 +38,11 @@ export const validateProduct = (product: ProductDto) => {
         return "All fields are required.";
     }
     return null;
+}
+
+export const processUploadedFile = (file: Express.Multer.File | undefined): string | null => {
+    if (!file) {
+        return null;
+    }
+    return `/uploads/${file.filename}`;
 }

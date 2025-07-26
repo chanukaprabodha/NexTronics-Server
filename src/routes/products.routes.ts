@@ -7,6 +7,7 @@ import {
     updateProduct
 } from "../controllers/product.controller";
 import {authorizeRoles} from "../middleware/auth.middleware";
+import upload from "../middleware/upload.middleware";
 
 const productRouter: Router = Router();
 
@@ -16,10 +17,10 @@ const productRouter: Router = Router();
 productRouter.get("/all", authorizeRoles('admin','customer'), getAllProducts);
 
 // 1.2 Save a new product
-productRouter.post("/save", authorizeRoles('admin'), saveProduct);
+productRouter.post("/save", authorizeRoles('admin'), upload.single("image"),saveProduct);
 
 // 1.3 Update an existing product
-productRouter.put("/update/:id", authorizeRoles('admin'), updateProduct);
+productRouter.put("/update/:id", authorizeRoles('admin'),upload.single("image"), updateProduct);
 
 // 1.4 Delete a product
 productRouter.delete("/delete/:id", authorizeRoles('admin'), deleteProduct);

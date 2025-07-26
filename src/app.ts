@@ -5,6 +5,8 @@ import cors from 'cors';
 import contactRoutes from "./routes/contact.routes";
 import authRoutes from "./routes/auth.routes";
 import {authenticateToken} from "./middleware/auth.middleware";
+import path from "path";
+import uploadRoutes from "./routes/upload.routes";
 
 const app: Express = express();
 
@@ -33,4 +35,6 @@ app.use(cors(corsOptions));
 app.use("/api/products",authenticateToken, productRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/auth",authRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/api/uploads", uploadRoutes);
 export default app;

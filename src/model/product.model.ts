@@ -4,7 +4,7 @@ const productModel =new mongoose.Schema(
     {
         "id": {
             required: true,
-            type: Number,
+            type: String,
             unique: true,
             index: true // For better performance on queries
         },
@@ -33,6 +33,10 @@ const productModel =new mongoose.Schema(
             type: Number,
             default: 0
         },
+        "isWishlisted": {
+            type: Boolean,
+            default: false
+        }
     }
 );
 
