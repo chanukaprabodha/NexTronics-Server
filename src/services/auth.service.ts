@@ -1,4 +1,5 @@
-import {User} from "../model/user.model";
+import User, {UserDocument} from "../model/user.model";
+import { UserDto } from "../dto/user.dto";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -10,48 +11,34 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
 const refreshTokens = new Set<string>();
 
-const adminUser: User = {
-    id: 1,
-    username: "admin",
-    password: bcrypt.hashSync("1234", 10),
-    role: "admin"
-}
-
-const customerUser: User = {
-    id: 2,
-    username: "customer",
-    password: bcrypt.hashSync("1234", 10),
-    role: "customer"
-}
-
-const userList: User[] = [];
-userList.push(adminUser);
-userList.push(customerUser);
-
-export const authenticateUser = (username: string,
+export const authenticateUser = async (email: string,
                                  password: string) => {
-    const existingUser: User | undefined = userList.find(user => user.username === username);
 
-    let isValidPassword = undefined !== existingUser && bcrypt.compareSync(password,<string>existingUser?.password);
+    const existingUser: UserDocument | null =await User.findOne({email: email});
 
-    if (!existingUser || !isValidPassword) {
+    if (!existingUser) {
+        return null;
+    }
+
+    const isValidPassword = bcrypt.compareSync(password, <string>existingUser.password);
+
+    if (!isValidPassword) {
         return null;
     }
 
     const accessToken = jwt.sign({
         id: existingUser.id,
-        username: existingUser.username,
+        name: existingUser.name,
         role: existingUser.role
     }, JWT_SECRET, {
         expiresIn: "1d"
     });
 
     const refreshToken = jwt.sign({
-        username: existingUser.username
+        name: existingUser.name
     }, REFRESH_TOKEN_SECRET, {
         expiresIn: "7d"
     });
 
-    refreshTokens.add(refreshToken);
     return {accessToken, refreshToken}
 }

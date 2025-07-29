@@ -1,7 +1,6 @@
 import {Request, Response} from 'express';
 import * as productService from '../services/product.service';
 
-// Controller function to get all products
 export const getAllProducts = async (req: Request,
                                      res: Response) => {
     try {
@@ -15,7 +14,6 @@ export const getAllProducts = async (req: Request,
     }
 }
 
-// Controller function to save a new product
 export const saveProduct = async (req: Request,
                                   res: Response) => {
     try {
@@ -46,8 +44,8 @@ export const saveProduct = async (req: Request,
 
 }
 
-// Controller function to update an existing product
-export const updateProduct = async (req: Request, res: Response) => {
+export const updateProduct = async (req: Request,
+                                    res: Response) => {
     try {
         const productId = req.params.id;
 
@@ -60,10 +58,17 @@ export const updateProduct = async (req: Request, res: Response) => {
 
         const updatedData = req.body;
 
-        // Process the uploaded file and update the image field if a new file is provided
         const filePath = productService.processUploadedFile(req.file);
         if (filePath) {
             updatedData.image = filePath;
+        }
+
+        const validationError = await productService.validateProduct(updatedData);
+        if (validationError) {
+            res.status(400).json({
+                error: validationError
+            });
+            return;
         }
 
         const updatedProduct = await productService.updateProduct(productId, updatedData);
@@ -83,7 +88,8 @@ export const updateProduct = async (req: Request, res: Response) => {
         });
     }
 };
-// Controller function to delete a product
+
+
 export const deleteProduct = (req: Request,
                               res: Response) => {
     const productId = req.params.id;
@@ -105,9 +111,9 @@ export const deleteProduct = (req: Request,
     })
 }
 
-// Controller function to get a product by ID
+
 export const getProductById = async (req: Request,
-                               res: Response) => {
+                                     res: Response) => {
     const productId = req.params.id;
 
     if (!productId) {

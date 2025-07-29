@@ -7,6 +7,8 @@ import authRoutes from "./routes/auth.routes";
 import {authenticateToken} from "./middleware/auth.middleware";
 import path from "path";
 import uploadRoutes from "./routes/upload.routes";
+import cartRoutes from "./routes/cart.routes";
+import userRoutes from "./routes/user.routes";
 
 const app: Express = express();
 
@@ -37,4 +39,6 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/auth",authRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/uploads", uploadRoutes);
+app.use("/api/cart", authenticateToken, cartRoutes);
+app.use("/api/users",userRoutes);
 export default app;
