@@ -9,6 +9,7 @@ import path from "path";
 import uploadRoutes from "./routes/upload.routes";
 import cartRoutes from "./routes/cart.routes";
 import userRoutes from "./routes/user.routes";
+import orderRoutes from "./routes/order.routes";
 
 const app: Express = express();
 
@@ -41,4 +42,5 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/cart", authenticateToken, cartRoutes);
 app.use("/api/users",userRoutes);
+app.use("/api/order",authenticateToken ,orderRoutes)
 export default app;

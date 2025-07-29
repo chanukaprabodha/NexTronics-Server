@@ -9,9 +9,6 @@ export const addToCart = async (req: Request, res: Response) => {
     }
 
     try {
-        console.log("Adding to cart for user:", userId);
-        console.log("Items:", items);
-
         const result = await cartService.addToCart(userId, items);
         res.status(200).json(result);
     } catch (error) {
@@ -53,8 +50,6 @@ export const getCartItems = async (req: Request, res: Response) => {
     if (!userId || typeof userId !== 'string') {
         return res.status(400).json({ error: 'Invalid user ID' });
     }
-
-    console.log(`Fetching cart items for user ${userId}`);
 
     try {
         const cart = await cartService.getCartByUserId(userId);
